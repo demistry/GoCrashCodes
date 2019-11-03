@@ -8,25 +8,37 @@ import (
 
 func main() {
 
-	timeConversion("07:05:45PM")
+	result := timeConversion("07:05:50PM")
+	fmt.Printf(result)
 }
 
-func timeConversion(twelveHourFormat string) {
+func timeConversion(twelveHourFormat string) string {
 	stringArr := strings.Split(twelveHourFormat, ":")
 	hourInt, _ := strconv.Atoi(stringArr[0])
-	minuteStr, _ := strconv.Atoi(stringArr[1])
-	// minuteStr := strconv.ParseInt(stringArr[1])
-	secondsString := stringArr[2]
+	minuteStr := stringArr[1]
+	secondsString := strings.ToLower(stringArr[2])
 	var numberOfSeconds string
 	var amOrPm string
-	if strings.Contains(secondsString, "PM") { //PM
-		numberOfSeconds = strings.Split(secondsString, "PM")[0]
-		amOrPm = "PM"
+	if strings.Contains(secondsString, "pm") { //PM
+		numberOfSeconds = strings.Split(secondsString, "pm")[0]
+		amOrPm = "pm"
+	} else if strings.Contains(secondsString, "am") {
+		numberOfSeconds = strings.Split(secondsString, "am")[0]
+		amOrPm = "am"
 	} else {
-		numberOfSeconds = strings.Split(secondsString, "AM")[0]
-		amOrPm = "AM"
+		return "Invalid Time Format, please check input...\n"
 	}
-	fmt.Printf("%v for first\n", hourInt)
-	fmt.Printf("%v for second\n", minuteStr)
-	fmt.Printf("%v for %v third\n", string(amOrPm), numberOfSeconds)
+	if amOrPm == "pm" {
+		if hourInt > 0 && hourInt < 12 {
+			hourInt = 12 + hourInt
+		}
+	} else {
+		if hourInt == 12 {
+			hourInt = 00
+		}
+	}
+	hourStr := fmt.Sprintf("%02d", hourInt)
+	var arrayOfTimeIntegers = []string{hourStr, minuteStr, numberOfSeconds + "\n"}
+	// return "24 hour format is " + strings.Join(arrayOfTimeIntegers, ":")
+	return strings.Join(arrayOfTimeIntegers, ":")
 }
